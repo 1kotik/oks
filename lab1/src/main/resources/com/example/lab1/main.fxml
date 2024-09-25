@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.lab1.controller.Controller">
+   <children>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="241.0" layoutX="225.0" layoutY="8.0" stroke="BLACK" strokeType="INSIDE" width="195.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="241.0" layoutX="426.0" layoutY="8.0" stroke="BLACK" strokeType="INSIDE" width="166.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="241.0" layoutX="13.0" layoutY="9.0" stroke="BLACK" strokeType="INSIDE" width="195.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#d6d9dc" height="126.0" layoutX="13.0" layoutY="262.0" stroke="#fafafa" strokeType="INSIDE" width="443.0" />
+      <Label alignment="CENTER" layoutX="22.0" layoutY="14.0" prefHeight="18.0" prefWidth="178.0" text="Transmitter" />
+      <Label alignment="CENTER" layoutX="246.0" layoutY="14.0" prefHeight="18.0" prefWidth="160.0" text="Receiver" />
+      <TextArea fx:id="input_window" layoutX="22.0" layoutY="32.0" prefHeight="210.0" prefWidth="177.0" wrapText="true" />
+      <TextArea fx:id="output_window" editable="false" layoutX="233.0" layoutY="32.0" prefHeight="210.0" prefWidth="178.0" style="-fx-border-color: lightblue; -fx-border-width: 2.5;" wrapText="true" />
+      <Label layoutX="468.0" layoutY="14.0" text="Status Window" />
+      <GridPane layoutX="437.0" layoutY="32.0" prefHeight="171.0" prefWidth="141.0" style="-fx-background-color: lightgray;" vgap="10.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="60.4" minHeight="10.0" prefHeight="26.799999999999997" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="79.40000762939454" minHeight="10.0" prefHeight="28.999999999999993" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="109.00000762939455" minHeight="1.7999999999999972" prefHeight="25.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="115.0" minHeight="1.5999999999999943" prefHeight="27.200000000000017" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="128.4" minHeight="10.0" prefHeight="29.599999999999994" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label prefHeight="26.0" prefWidth="109.0" text="Baud rate:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets left="2.0" />
+               </GridPane.margin></Label>
+            <Label prefHeight="26.0" prefWidth="172.0" text="Data bits:" GridPane.rowIndex="1">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <padding>
+                  <Insets left="2.0" />
+               </padding></Label>
+            <Label prefHeight="26.0" prefWidth="106.0" text="Bytes sent:" GridPane.rowIndex="4">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <padding>
+                  <Insets left="2.0" />
+               </padding></Label>
+            <Label prefHeight="26.0" prefWidth="122.0" text="Parity:" GridPane.rowIndex="3">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <padding>
+                  <Insets left="2.0" />
+               </padding>
+            </Label>
+            <Label prefHeight="26.0" prefWidth="145.0" text="Stop bits:" GridPane.rowIndex="2">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <padding>
+                  <Insets left="2.0" />
+               </padding>
+            </Label>
+            <Label fx:id="baud_rate" GridPane.columnIndex="1">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <Label fx:id="data_bits" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <Label fx:id="stop_bits" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <Label fx:id="parity" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <Label fx:id="symbols_sent" GridPane.columnIndex="1" GridPane.rowIndex="4">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+         </children>
+      </GridPane>
+      <ComboBox fx:id="input_choice" layoutX="23.0" layoutY="290.0" prefHeight="26.0" prefWidth="195.0" promptText="Select COM-port to transmit" visibleRowCount="3" />
+      <ComboBox fx:id="output_choice" layoutX="258.0" layoutY="290.0" prefHeight="26.0" prefWidth="187.0" promptText="Select COM-port to receive" visibleRowCount="3" />
+      <Label alignment="CENTER" layoutX="131.0" layoutY="271.0" prefHeight="18.0" prefWidth="206.0" text="Control Window" />
+   </children>
+</AnchorPane>
