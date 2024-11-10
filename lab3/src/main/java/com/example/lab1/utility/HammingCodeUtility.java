@@ -15,7 +15,7 @@ public class HammingCodeUtility {
                     parity ^= charToBoolean(data.charAt(i));
                 }
             }
-            data.setCharAt(data.length() - 1 - checkBit, parity ? '1' : '0');
+            data.setCharAt(data.length() - 5 + checkBit, parity ? '1' : '0');
             parity = false;
         }
         return frame.substring(0, 16) + data.toString();
@@ -26,7 +26,7 @@ public class HammingCodeUtility {
         int errorPosition = 0;
         int checkBitCount = log2(data.substring(0,17).length()+1);
         for (int checkBit = 0; checkBit < checkBitCount; checkBit++) {
-            boolean parity = charToBoolean(data.charAt(data.length() - 1 - checkBit));
+            boolean parity = charToBoolean(data.charAt(data.length() - 5 + checkBit));
             for (int i = 0; i < data.length() - checkBitCount; i++) {
                 if (isBitControlled(i + 1, checkBit)) {
                     parity ^= charToBoolean(data.charAt(i));
