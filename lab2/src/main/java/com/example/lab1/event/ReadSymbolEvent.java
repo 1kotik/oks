@@ -24,12 +24,10 @@ public class ReadSymbolEvent implements SerialPortEventListener {
         if (serialPortEvent.isRXCHAR() && serialPortEvent.getEventValue() > 0) {
             try {
                 byte[] symbol = port.readBytes(serialPortEvent.getEventValue());
-                if (symbol[0] == '0' || symbol[0] == '1' || symbol[0] == '\n') {
-                    String receivedData = new String(symbol, StandardCharsets.UTF_8);
-                    String frame= BitStaffingUtility.bitDeStaffing(receivedData);
-                    String outputData=frame.substring(16,33);
-                    output.appendText(outputData+"\n");
-                }
+                String receivedData = new String(symbol, StandardCharsets.UTF_8);
+                String frame= BitStaffingUtility.bitDeStaffing(receivedData);
+                String outputData=frame.substring(16,33);
+                output.appendText(outputData);
 
             } catch (SerialPortException e) {
                e.printStackTrace();

@@ -17,7 +17,7 @@ public class SceneInitializer {
         stage.setScene(new Scene(fxmlLoader.load()));
         Controller controller = fxmlLoader.getController();
         stage.setOnCloseRequest(controller.onClose());
-        stage.setTitle("lab2");
+        stage.setTitle("lab3");
         stage.setResizable(false);
         stage.show();
     }

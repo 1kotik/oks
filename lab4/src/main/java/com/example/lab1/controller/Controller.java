@@ -7,9 +7,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.WindowEvent;
 import jssc.SerialPort;
 import jssc.SerialPortException;
@@ -51,7 +56,20 @@ public class Controller {
     private Label parity;
 
     @FXML
+    private Label modifiedFrame;
+
+    @FXML
+    private Label collisionLabel;
+
+    @FXML
     public void initialize() {
+//        Text zero=new Text("0");
+//        Text hintText=new Text(" - inserted bit");
+//        zero.setFill(Color.RED);
+//        HBox hbox=new HBox(zero,hintText);
+//        hbox.setAlignment(Pos.CENTER);
+//        hint.setGraphic(hbox);
+
         readPort = new SerialPort("");
         writePort = new SerialPort("");
         symbols_sent.setText("0");
@@ -65,6 +83,7 @@ public class Controller {
                 _ -> input_choice.setItems(getPorts(true)));
         output_choice.addEventHandler(MouseEvent.MOUSE_CLICKED,
                 _ -> output_choice.setItems(getPorts(false)));
+
         TextFormatter<String> inputFormatter = new TextFormatter<>(change -> {
             if (change.isDeleted() || change.getText().isEmpty()) {
                 return null;
@@ -73,12 +92,7 @@ public class Controller {
                 setAlert("Error!", "No transmitter selected");
                 return null;
             }
-            if (change.getControlNewText().matches("[ -~\n]*") && writePort.isOpened()) {
-                Platform.runLater(() -> {
-                    String currentCount = symbols_sent.getText();
-                    int newCount = Integer.parseInt(currentCount) + 1;
-                    symbols_sent.setText(String.valueOf(newCount));
-                });
+            if (change.getControlNewText().matches("[0-1\n]*") && writePort.isOpened()) {
                 return change;
             }
             return null;
@@ -114,7 +128,7 @@ public class Controller {
     public void writePortSelected() throws SerialPortException {
         try {
             int status = initPort(writePort, input_choice, true);
-            SendSymbolEvent sendSymbolEvent = new SendSymbolEvent(input_window, writePort);
+            SendSymbolEvent sendSymbolEvent = new SendSymbolEvent(input_window, writePort, modifiedFrame, symbols_sent, collisionLabel);
             if (status == 2) {
                 writePort = new SerialPort(input_choice.getValue());
                 if (writePort.isOpened()) {
@@ -128,11 +142,11 @@ public class Controller {
                 }
             }
             if (writePort.isOpened()) {
-                sendSymbolEvent = new SendSymbolEvent(input_window, writePort);
+                sendSymbolEvent = new SendSymbolEvent(input_window, writePort, modifiedFrame, symbols_sent, collisionLabel);
                 SendSymbolEvent finalSendSymbolEvent = sendSymbolEvent;
                 input_window.addEventHandler(KeyEvent.KEY_TYPED, event -> {
                     byte symbol = event.getCharacter().getBytes()[0];
-                    if ((writePort.isOpened()) && (symbol > 31 && symbol < 127) || symbol == 13) {
+                    if ((writePort.isOpened()) && (symbol == '0' || symbol == '1') || symbol == 13) {
                         finalSendSymbolEvent.handle(event);
                     } else {
                         event.consume();
@@ -199,30 +213,31 @@ public class Controller {
 
     public ObservableList<String> getPorts(boolean write) {
         ObservableList<String> result = FXCollections.observableArrayList("-");
-        String[] ports=SerialPortList.getPortNames();
+        String[] ports = SerialPortList.getPortNames();
         ArrayList<String> sortedPorts = new ArrayList<>();
         if (write) {
-            for(int i=0;i<ports.length;i+=2) {
-                sortedPorts.add(ports[i]);
+            for (int i = 0; i < ports.length; i += 2) {
+                if (Integer.parseInt(ports[i].substring(3)) <= 15) {
+                    sortedPorts.add(ports[i]);
+                }
             }
-            if(!output_choice.getValue().equals("-")&&!output_choice.getValue().equals(DEST_PORT_MSG)){
+            if (!output_choice.getValue().equals("-") && !output_choice.getValue().equals(DEST_PORT_MSG)) {
                 sortedPorts.remove(output_choice.getValue());
                 sortedPorts.remove(String.format("COM%d",
-                        Integer.parseInt(output_choice.getValue().substring(3))-1));
+                        Integer.parseInt(output_choice.getValue().substring(3)) - 1));
             }
-        }
-        else{
-            for(int i=1;i<ports.length;i+=2) {
-                sortedPorts.add(ports[i]);
+        } else {
+            for (int i = 1; i < ports.length; i += 2) {
+                if (Integer.parseInt(ports[i].substring(3)) <= 16) {
+                    sortedPorts.add(ports[i]);
+                }
             }
-            if(!input_choice.getValue().equals("-")&&!input_choice.getValue().equals(SRC_PORT_MSG)){
+            if (!input_choice.getValue().equals("-") && !input_choice.getValue().equals(SRC_PORT_MSG)) {
                 sortedPorts.remove(input_choice.getValue());
                 sortedPorts.remove(String.format("COM%d",
-                        Integer.parseInt(input_choice.getValue().substring(3))+1));
+                        Integer.parseInt(input_choice.getValue().substring(3)) + 1));
             }
         }
-        //sortedPorts.remove("COM3");
-        //sortedPorts.remove("COM4");
         result.addAll(sortedPorts);
         return result;
     }

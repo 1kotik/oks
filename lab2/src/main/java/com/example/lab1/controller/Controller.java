@@ -7,10 +7,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.WindowEvent;
 import jssc.SerialPort;
 import jssc.SerialPortException;
@@ -21,7 +25,8 @@ import java.util.*;
 public class Controller {
     SerialPort readPort;
     SerialPort writePort;
-    int bytesInFrameCount;
+    private final String SRC_PORT_MSG="Select COM-port as transmitter";
+    private final String DEST_PORT_MSG="Select COM-port as receiver";
     @FXML
     private TextArea input_window;
 
@@ -54,8 +59,17 @@ public class Controller {
     private Label modifiedFrame;
 
     @FXML
+    private Label hint;
+
+    @FXML
     public void initialize() {
-        bytesInFrameCount = 0;
+//        Text zero=new Text("0");
+//        Text hintText=new Text(" - inserted bit");
+//        zero.setFill(Color.RED);
+//        HBox hbox=new HBox(zero,hintText);
+//        hbox.setAlignment(Pos.CENTER);
+//        hint.setGraphic(hbox);
+
         readPort = new SerialPort("");
         writePort = new SerialPort("");
         symbols_sent.setText("0");
@@ -63,32 +77,22 @@ public class Controller {
         data_bits.setText("-");
         stop_bits.setText("-");
         parity.setText("-");
-        input_choice.setValue("Select COM-port to transmit");
-        output_choice.setValue("Select COM-port to receive");
+        input_choice.setValue(SRC_PORT_MSG);
+        output_choice.setValue(DEST_PORT_MSG);
         input_choice.addEventHandler(MouseEvent.MOUSE_CLICKED,
                 _ -> input_choice.setItems(getPorts(true)));
         output_choice.addEventHandler(MouseEvent.MOUSE_CLICKED,
                 _ -> output_choice.setItems(getPorts(false)));
+
         TextFormatter<String> inputFormatter = new TextFormatter<>(change -> {
             if (change.isDeleted() || change.getText().isEmpty()) {
                 return null;
             }
-            if (input_choice.getValue().equals("-") || input_choice.getValue().equals("Select COM-port to transmit")) {
+            if (input_choice.getValue().equals("-") || input_choice.getValue().equals(SRC_PORT_MSG)) {
                 setAlert("Error!", "No transmitter selected");
                 return null;
             }
             if (change.getControlNewText().matches("[0-1\n]*") && writePort.isOpened()) {
-                Platform.runLater(() -> {
-                    if (!change.getControlNewText().endsWith("\n")) {
-                        bytesInFrameCount++;
-                    }
-                    if (bytesInFrameCount % 17 == 0 && !change.getControlNewText().endsWith("\n")) {
-                        String currentCount = symbols_sent.getText();
-                        int newCount = Integer.parseInt(currentCount) + 17;
-                        symbols_sent.setText(String.valueOf(newCount));
-                        input_window.appendText("\n");
-                    }
-                });
                 return change;
             }
             return null;
@@ -124,7 +128,7 @@ public class Controller {
     public void writePortSelected() throws SerialPortException {
         try {
             int status = initPort(writePort, input_choice, true);
-            SendSymbolEvent sendSymbolEvent = new SendSymbolEvent(input_window, writePort, modifiedFrame);
+            SendSymbolEvent sendSymbolEvent = new SendSymbolEvent(input_window, writePort, modifiedFrame, symbols_sent);
             if (status == 2) {
                 writePort = new SerialPort(input_choice.getValue());
                 if (writePort.isOpened()) {
@@ -138,7 +142,7 @@ public class Controller {
                 }
             }
             if (writePort.isOpened()) {
-                sendSymbolEvent = new SendSymbolEvent(input_window, writePort, modifiedFrame);
+                sendSymbolEvent = new SendSymbolEvent(input_window, writePort, modifiedFrame, symbols_sent);
                 SendSymbolEvent finalSendSymbolEvent = sendSymbolEvent;
                 input_window.addEventHandler(KeyEvent.KEY_TYPED, event -> {
                     byte symbol = event.getCharacter().getBytes()[0];
@@ -217,7 +221,7 @@ public class Controller {
                     sortedPorts.add(ports[i]);
                 }
             }
-            if (!output_choice.getValue().equals("-") && !output_choice.getValue().equals("Select COM-port to receive")) {
+            if (!output_choice.getValue().equals("-") && !output_choice.getValue().equals(DEST_PORT_MSG)) {
                 sortedPorts.remove(output_choice.getValue());
                 sortedPorts.remove(String.format("COM%d",
                         Integer.parseInt(output_choice.getValue().substring(3)) - 1));
@@ -228,14 +232,12 @@ public class Controller {
                     sortedPorts.add(ports[i]);
                 }
             }
-            if (!input_choice.getValue().equals("-") && !input_choice.getValue().equals("Select COM-port to transmit")) {
+            if (!input_choice.getValue().equals("-") && !input_choice.getValue().equals(SRC_PORT_MSG)) {
                 sortedPorts.remove(input_choice.getValue());
                 sortedPorts.remove(String.format("COM%d",
                         Integer.parseInt(input_choice.getValue().substring(3)) + 1));
             }
         }
-        sortedPorts.remove("COM3");
-        sortedPorts.remove("COM4");
         result.addAll(sortedPorts);
         return result;
     }

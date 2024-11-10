@@ -15,23 +15,28 @@ public class SendSymbolEvent implements EventHandler<KeyEvent> {
     private final TextArea input;
     private final SerialPort port;
     private final Label modifiedFrame;
+    private final Label symbolsSent;
 
-    public SendSymbolEvent(TextArea input, SerialPort port, Label modifiedFrame) {
+    public SendSymbolEvent(TextArea input, SerialPort port, Label modifiedFrame, Label symbolsSent) {
         this.input = input;
         this.port = port;
         this.modifiedFrame = modifiedFrame;
+        this.symbolsSent = symbolsSent;
     }
 
     @Override
     public void handle(KeyEvent event) {
         try {
-            String data = input.getText().replace("\n", "");
-            if (data.length() % 17 == 0 && !input.getText().substring(input.getLength() - 1).equals("\n")) {
+            String data = input.getText();
+            if (data.length() % 17 == 0) {
                 String frame = createFrame(data);
                 PortInitializer initializer = new PortInitializer();
                 initializer.initializePort(port);
                 byte[] message = BitStaffingUtility.bitStaffing(frame, modifiedFrame).getBytes(StandardCharsets.UTF_8);
                 port.writeBytes(message);
+                String currentCount = symbolsSent.getText();
+                int newCount = Integer.parseInt(currentCount) + 17;
+                symbolsSent.setText(String.valueOf(newCount));
             }
         } catch (SerialPortException e) {
             e.printStackTrace();

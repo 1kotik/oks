@@ -11,9 +11,9 @@
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="241.0" layoutX="225.0" layoutY="8.0" stroke="BLACK" strokeType="INSIDE" width="195.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="241.0" layoutX="426.0" layoutY="8.0" stroke="BLACK" strokeType="INSIDE" width="166.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="241.0" layoutX="13.0" layoutY="9.0" stroke="BLACK" strokeType="INSIDE" width="195.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#d6d9dc" height="126.0" layoutX="13.0" layoutY="262.0" stroke="#fafafa" strokeType="INSIDE" width="443.0" />
-      <Label alignment="CENTER" layoutX="22.0" layoutY="14.0" prefHeight="18.0" prefWidth="178.0" text="Transmitter" />
-      <Label alignment="CENTER" layoutX="246.0" layoutY="14.0" prefHeight="18.0" prefWidth="160.0" text="Receiver" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#d6d9dc" height="126.0" layoutX="13.0" layoutY="262.0" stroke="#fafafa" strokeType="INSIDE" width="484.0" />
+      <Label alignment="CENTER" layoutX="22.0" layoutY="14.0" prefHeight="18.0" prefWidth="178.0" text="Data to transmit" />
+      <Label alignment="CENTER" layoutX="246.0" layoutY="14.0" prefHeight="18.0" prefWidth="160.0" text="Received data" />
       <TextArea fx:id="input_window" layoutX="22.0" layoutY="32.0" prefHeight="210.0" prefWidth="177.0" wrapText="true" />
       <TextArea fx:id="output_window" editable="false" layoutX="233.0" layoutY="32.0" prefHeight="210.0" prefWidth="178.0" style="-fx-border-color: lightblue; -fx-border-width: 2.5;" wrapText="true" />
       <Label layoutX="468.0" layoutY="14.0" text="Status Window" />
@@ -94,8 +94,8 @@
             </Label>
          </children>
       </GridPane>
-      <ComboBox fx:id="input_choice" layoutX="23.0" layoutY="290.0" prefHeight="26.0" prefWidth="195.0" promptText="Select COM-port to transmit" visibleRowCount="3" />
-      <ComboBox fx:id="output_choice" layoutX="258.0" layoutY="290.0" prefHeight="26.0" prefWidth="187.0" promptText="Select COM-port to receive" visibleRowCount="3" />
+      <ComboBox fx:id="input_choice" layoutX="23.0" layoutY="290.0" prefHeight="26.0" prefWidth="231.0" promptText="Select COM-port to transmit" visibleRowCount="3" />
+      <ComboBox fx:id="output_choice" layoutX="276.0" layoutY="290.0" prefHeight="26.0" prefWidth="213.0" promptText="Select COM-port to receive" visibleRowCount="3" />
       <Label alignment="CENTER" layoutX="131.0" layoutY="271.0" prefHeight="18.0" prefWidth="206.0" text="Control Window" />
    </children>
 </AnchorPane>

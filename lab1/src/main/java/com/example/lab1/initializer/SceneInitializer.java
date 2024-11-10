@@ -17,7 +17,7 @@ public class SceneInitializer {
         stage.setScene(new Scene(fxmlLoader.load()));
         Controller controller = fxmlLoader.getController();
         stage.setOnCloseRequest(controller.onClose());
-        stage.setTitle("COM-port transmitter");
+        stage.setTitle("lab1");
         stage.setResizable(false);
         stage.show();
     }
